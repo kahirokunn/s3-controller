@@ -133,6 +133,15 @@ spec:
       hostIPC: false
       hostNetwork: false
       hostPID: false
+      {{ if .Values.hostNetwork }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      {{ else }}
+      hostNetwork: false
+      {{ with .Values.dnsPolicy }}
+      dnsPolicy: {{ . }}
+      {{ end }}
+      {{ end }}
       {{ if .Values.aws.credentials.secretName -}}
       volumes:
         - name: {{ .Values.aws.credentials.secretName }}
